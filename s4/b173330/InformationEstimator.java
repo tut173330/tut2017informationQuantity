@@ -41,12 +41,18 @@ public class InformationEstimator implements InformationEstimatorInterface{
     }
 
     public double estimation(){
+	if(myTarget == null || myTarget.length == 0){
+	    return 0.0;
+	}
+	if(mySpace == null){
+	    return Double.MAX_VALUE;
+	}
 	boolean [] partition = new boolean[myTarget.length+1];
 	int np;
 	np = 1<<(myTarget.length-1);
 	// System.out.println("np="+np+" length="+myTarget.length);
 	double value = Double.MAX_VALUE; // value = mininimum of each "value1".
-
+	
 	for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
 	    // binary representation of p forms partition.
 	    // for partition {"ab" "cde" "fg"}
@@ -57,7 +63,7 @@ public class InformationEstimator implements InformationEstimatorInterface{
 		partition[i+1] = (0 !=((1<<i) & p));
 	    }
 	    partition[myTarget.length] = true;
-
+	    
 	    // Compute Information Quantity for the partition, in "value1"
 	    // value1 = IQ(#"ab")+IQ(#"cde")+IQ(#"fg") for the above example
             double value1 = (double) 0.0;
@@ -76,13 +82,13 @@ public class InformationEstimator implements InformationEstimatorInterface{
 		start = end;
 	    }
 	    // System.out.println(" "+ value1);
-
+	    
 	    // Get the minimal value in "value"
 	    if(value1 < value) value = value1;
 	}
 	return value;
     }
-
+    
     public static void main(String[] args) {
 	InformationEstimator myObject;
 	double value;
